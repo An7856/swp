@@ -1,0 +1,28 @@
+# 📦 Worker 自动更新系统
+
+![状态](https://img.shields.io/badge/状态-运行中-brightgreen)
+![版本](https://img.shields.io/badge/版本-v3.3.5-blue)
+![模式](https://img.shields.io/badge/模式-自动-yellow)
+![渠道](https://img.shields.io/badge/渠道-稳定版-green)
+![反混淆](https://img.shields.io/badge/反混淆-true-red)
+
+## 🚀 功能概述
+- 自动检查并更新Worker脚本
+- 支持定时和手动触发更新
+- 双渠道更新（稳定版/测试版）
+- 自动代码反混淆处理
+- **智能配置记忆** - 自动记住上次的参数选择
+
+## 📖 使用说明
+### 🤖 自动模式
+- 每日北京时间02:00自动检查更新
+- 使用上次缓存的工作参数配置
+
+### 👆 手动模式
+1. 进入GitHub Actions页面
+2. 选择"Worker Auto-Updater"工作流
+3. 点击"Run workflow"并选择参数：
+   - 更新模式（自动/手动）
+   - 发布渠道（稳定版/测试版）
+   - 是否反混淆代码（true/false）
+   > 💡 留空参数将使用上次配置
