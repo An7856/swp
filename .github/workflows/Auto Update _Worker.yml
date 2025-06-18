@@ -200,14 +200,26 @@ jobs:
             print("文件保存成功")
       shell: python
 
-    # 5. 文档更新（精简版）
+    # 5. 文档更新（带顶部状态徽章版）
     - name: 初始化或更新README
       if: steps.get-release.outputs.version
       run: |
+        # 转换参数为URL安全格式
+        UPDATE_MODE_URL=$(echo "${{ env.UPDATE_MODE }}" | sed 's/ /%20/g')
+        RELEASE_CHANNEL_URL=$(echo "${{ env.RELEASE_CHANNEL }}" | sed 's/ /%20/g')
+        DEOBFUSCATE_URL=$(echo "${{ env.DEOBFUSCATE }}" | tr '[:upper:]' '[:lower:]')
+
         # 初始化文件（如果不存在）
         if [ ! -f "README.md" ]; then
           echo "# 📦 Worker 自动更新系统" > README.md
           echo "" >> README.md
+          # 顶部状态徽章
+          echo "[![版本](https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue)]()" >> README.md
+          echo "[![模式](https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow)]()" >> README.md
+          echo "[![渠道](https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green)]()" >> README.md
+          echo "[![反混淆](https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red)]()" >> README.md
+          echo "" >> README.md
+          
           echo "## 🚀 功能概述" >> README.md
           echo "- 自动检查并更新Worker脚本" >> README.md
           echo "- 支持定时和手动触发更新" >> README.md
@@ -235,7 +247,7 @@ jobs:
           echo "## 🔍 当前状态" >> README.md
         fi
 
-        # 更新状态信息区块（只保留最新一条）
+        # 更新状态信息区块
         sed -i '/## 🔍 当前状态/,/^## /{/^## /!d}' README.md
         echo "### 🛠️ 最新更新" >> README.md
         echo "- 🏷️ **版本号**: \`${{ steps.get-release.outputs.version }}\`" >> README.md
@@ -244,6 +256,12 @@ jobs:
         echo "- 🌿 **发布渠道**: \`${{ env.RELEASE_CHANNEL }}\`" >> README.md
         echo "- 🔧 **反混淆**: \`${{ env.DEOBFUSCATE }}\`" >> README.md
         echo "" >> README.md
+
+        # 更新顶部徽章显示
+        sed -i "s|https://img.shields.io/badge/版本-[^)]*|https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue|g" README.md
+        sed -i "s|https://img.shields.io/badge/模式-[^)]*|https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow|g" README.md
+        sed -i "s|https://img.shields.io/badge/渠道-[^)]*|https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green|g" README.md
+        sed -i "s|https://img.shields.io/badge/反混淆-[^)]*|https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red|g" README.md
 
     # 6. 提交变更
     - name: 提交更新
