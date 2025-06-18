@@ -200,7 +200,7 @@ jobs:
             print("文件保存成功")
       shell: python
 
-    # 5. 文档更新（带顶部状态徽章版）
+    # 5. 文档更新（先删除旧文件版）
     - name: 初始化或更新README
       if: steps.get-release.outputs.version
       run: |
@@ -209,46 +209,47 @@ jobs:
         RELEASE_CHANNEL_URL=$(echo "${{ env.RELEASE_CHANNEL }}" | sed 's/ /%20/g')
         DEOBFUSCATE_URL=$(echo "${{ env.DEOBFUSCATE }}" | tr '[:upper:]' '[:lower:]')
 
-        # 初始化文件（如果不存在）
-        if [ ! -f "README.md" ]; then
-          echo "# 📦 Worker 自动更新系统" > README.md
-          echo "" >> README.md
-          # 顶部状态徽章
-          echo "[![版本](https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue)]()" >> README.md
-          echo "[![模式](https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow)]()" >> README.md
-          echo "[![渠道](https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green)]()" >> README.md
-          echo "[![反混淆](https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red)]()" >> README.md
-          echo "" >> README.md
-          
-          echo "## 🚀 功能概述" >> README.md
-          echo "- 自动检查并更新Worker脚本" >> README.md
-          echo "- 支持定时和手动触发更新" >> README.md
-          echo "- 双渠道更新（稳定版/测试版）" >> README.md
-          echo "- 自动代码反混淆处理" >> README.md
-          echo "- **智能配置记忆** - 自动记住上次的参数选择" >> README.md
-          echo "" >> README.md
-          
-          echo "## 📖 使用说明" >> README.md
-          echo "### 🤖 自动模式" >> README.md
-          echo "- 每日北京时间02:00自动检查更新" >> README.md
-          echo "- 使用上次缓存的工作参数配置" >> README.md
-          echo "" >> README.md
-          
-          echo "### 👆 手动模式" >> README.md
-          echo "1. 进入GitHub Actions页面" >> README.md
-          echo "2. 选择\"Worker Auto-Updater\"工作流" >> README.md
-          echo "3. 点击\"Run workflow\"并选择参数：" >> README.md
-          echo "   - 更新模式（自动/手动）" >> README.md
-          echo "   - 发布渠道（稳定版/测试版）" >> README.md
-          echo "   - 是否反混淆代码（true/false）" >> README.md
-          echo "   > 💡 留空参数将使用上次配置" >> README.md
-          echo "" >> README.md
-          
-          echo "## 🔍 当前状态" >> README.md
+        # 删除旧README文件（如果存在）
+        if [ -f "README.md" ]; then
+          rm -f README.md
+          echo "已清理旧README文件"
         fi
 
-        # 更新状态信息区块
-        sed -i '/## 🔍 当前状态/,/^## /{/^## /!d}' README.md
+        # 创建新README文件
+        echo "# 📦 Worker 自动更新系统" > README.md
+        echo "" >> README.md
+        # 顶部状态徽章
+        echo "[![版本](https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue)]()" >> README.md
+        echo "[![模式](https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow)]()" >> README.md
+        echo "[![渠道](https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green)]()" >> README.md
+        echo "[![反混淆](https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red)]()" >> README.md
+        echo "" >> README.md
+        
+        echo "## 🚀 功能概述" >> README.md
+        echo "- 自动检查并更新Worker脚本" >> README.md
+        echo "- 支持定时和手动触发更新" >> README.md
+        echo "- 双渠道更新（稳定版/测试版）" >> README.md
+        echo "- 自动代码反混淆处理" >> README.md
+        echo "- **智能配置记忆** - 自动记住上次的参数选择" >> README.md
+        echo "" >> README.md
+        
+        echo "## 📖 使用说明" >> README.md
+        echo "### 🤖 自动模式" >> README.md
+        echo "- 每日北京时间02:00自动检查更新" >> README.md
+        echo "- 使用上次缓存的工作参数配置" >> README.md
+        echo "" >> README.md
+        
+        echo "### 👆 手动模式" >> README.md
+        echo "1. 进入GitHub Actions页面" >> README.md
+        echo "2. 选择\"Worker Auto-Updater\"工作流" >> README.md
+        echo "3. 点击\"Run workflow\"并选择参数：" >> README.md
+        echo "   - 更新模式（自动/手动）" >> README.md
+        echo "   - 发布渠道（稳定版/测试版）" >> README.md
+        echo "   - 是否反混淆代码（true/false）" >> README.md
+        echo "   > 💡 留空参数将使用上次配置" >> README.md
+        echo "" >> README.md
+        
+        echo "## 🔍 当前状态" >> README.md
         echo "### 🛠️ 最新更新" >> README.md
         echo "- 🏷️ **版本号**: \`${{ steps.get-release.outputs.version }}\`" >> README.md
         echo "- 🕒 **更新时间**: \`$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')\` (北京时间)" >> README.md
@@ -256,12 +257,6 @@ jobs:
         echo "- 🌿 **发布渠道**: \`${{ env.RELEASE_CHANNEL }}\`" >> README.md
         echo "- 🔧 **反混淆**: \`${{ env.DEOBFUSCATE }}\`" >> README.md
         echo "" >> README.md
-
-        # 更新顶部徽章显示
-        sed -i "s|https://img.shields.io/badge/版本-[^)]*|https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue|g" README.md
-        sed -i "s|https://img.shields.io/badge/模式-[^)]*|https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow|g" README.md
-        sed -i "s|https://img.shields.io/badge/渠道-[^)]*|https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green|g" README.md
-        sed -i "s|https://img.shields.io/badge/反混淆-[^)]*|https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red|g" README.md
 
     # 6. 提交变更
     - name: 提交更新
