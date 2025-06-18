@@ -200,15 +200,10 @@ jobs:
             print("文件保存成功")
       shell: python
 
-    # 5. 文档更新（优化版）
-    - name: 更新README文档
+    # 5. 文档更新（精简版）
+    - name: 初始化或更新README
       if: steps.get-release.outputs.version
       run: |
-        # 转换参数为URL安全格式
-        UPDATE_MODE_URL=$(echo "${{ env.UPDATE_MODE }}" | sed 's/ /%20/g')
-        RELEASE_CHANNEL_URL=$(echo "${{ env.RELEASE_CHANNEL }}" | sed 's/ /%20/g')
-        DEOBFUSCATE_URL=$(echo "${{ env.DEOBFUSCATE }}" | tr '[:upper:]' '[:lower:]')
-
         # 初始化文件（如果不存在）
         if [ ! -f "README.md" ]; then
           echo "# 📦 Worker 自动更新系统" > README.md
@@ -236,34 +231,19 @@ jobs:
           echo "   - 是否反混淆代码（true/false）" >> README.md
           echo "   > 💡 留空参数将使用上次配置" >> README.md
           echo "" >> README.md
-        fi
-
-        # 确保存在状态部分
-        if ! grep -q "## 🔍 当前状态" README.md; then
-          echo "" >> README.md
+          
           echo "## 🔍 当前状态" >> README.md
         fi
 
-        # 删除旧的运行时配置和徽章
-        sed -i '/### 🛠️ 运行时配置/,/^## \|^$/ {/^## \|^$/!d}' README.md 2>/dev/null || true
-        sed -i '/### 📊 状态徽章/,/^## \|^$/ {/^## \|^$/!d}' README.md 2>/dev/null || true
-
-        # 插入新的状态信息
-        sed -i '/## 🔍 当前状态/a \
-### 🛠️ 运行时配置\
-- 🏷️ **版本号**: `'"${{ steps.get-release.outputs.version }}"'`\
-- 🕒 **更新时间**: `'"$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')"'` (北京时间)\
-- ⚙️ **更新模式**: `'"${{ env.UPDATE_MODE }}"'`\
-- 🌿 **发布渠道**: `'"${{ env.RELEASE_CHANNEL }}"'`\
-- 🔧 **反混淆**: `'"${{ env.DEOBFUSCATE }}"'`\
-\
-### 📊 状态徽章\
-[![状态](https://img.shields.io/badge/状态-运行中-brightgreen)]()\
-[![版本](https://img.shields.io/badge/版本-'"${{ steps.get-release.outputs.version }}"'-blue)]()\
-[![模式](https://img.shields.io/badge/模式-'"$UPDATE_MODE_URL"'-yellow)]()\
-[![渠道](https://img.shields.io/badge/渠道-'"$RELEASE_CHANNEL_URL"'-green)]()\
-[![反混淆](https://img.shields.io/badge/反混淆-'"$DEOBFUSCATE_URL"'-red)]()\
-' README.md
+        # 更新状态信息区块（只保留最新一条）
+        sed -i '/## 🔍 当前状态/,/^## /{/^## /!d}' README.md
+        echo "### 🛠️ 最新更新" >> README.md
+        echo "- 🏷️ **版本号**: \`${{ steps.get-release.outputs.version }}\`" >> README.md
+        echo "- 🕒 **更新时间**: \`$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')\` (北京时间)" >> README.md
+        echo "- ⚙️ **更新模式**: \`${{ env.UPDATE_MODE }}\`" >> README.md
+        echo "- 🌿 **发布渠道**: \`${{ env.RELEASE_CHANNEL }}\`" >> README.md
+        echo "- 🔧 **反混淆**: \`${{ env.DEOBFUSCATE }}\`" >> README.md
+        echo "" >> README.md
 
     # 6. 提交变更
     - name: 提交更新
