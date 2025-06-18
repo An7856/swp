@@ -1,9 +1,9 @@
 # 📦 Worker 自动更新系统
 
 ![状态](https://img.shields.io/badge/状态-运行中-brightgreen)
-![版本](https://img.shields.io/badge/版本-v3.3.3-blue)
+![版本](https://img.shields.io/badge/版本-v3.3.5-blue)
 ![模式](https://img.shields.io/badge/模式-自动-yellow)
-![渠道](https://img.shields.io/badge/渠道-测试版-green)
+![渠道](https://img.shields.io/badge/渠道-稳定版-green)
 ![反混淆](https://img.shields.io/badge/反混淆-true-red)
 
 ## 🚀 功能概述
@@ -35,8 +35,22 @@
 
 ### 📊 状态徽章
 [![状态](https://img.shields.io/badge/状态-运行中-brightgreen)]()
-[![版本](https://img.shields.io/badge/版本-v3.3.3-blue)]()
+[![版本](https://img.shields.io/badge/版本-v3.3.5-blue)]()
 [![模式](https://img.shields.io/badge/模式-自动-yellow)]()
-[![渠道](https://img.shields.io/badge/渠道-测试版-green)]()
+[![渠道](https://img.shields.io/badge/渠道-稳定版-green)]()
+[![反混淆](https://img.shields.io/badge/反混淆-true-red)]()
+
+### 🛠️ 运行时配置
+- 🏷️ **版本号**: `v3.3.5`
+- 🕒 **更新时间**: `2025-06-19 03:52:28` (北京时间)
+- ⚙️ **更新模式**: `自动`
+- 🌿 **发布渠道**: `稳定版`
+- 🔧 **反混淆**: `true`
+
+### 📊 状态徽章
+[![状态](https://img.shields.io/badge/状态-运行中-brightgreen)]()
+[![版本](https://img.shields.io/badge/版本-v3.3.5-blue)]()
+[![模式](https://img.shields.io/badge/模式-自动-yellow)]()
+[![渠道](https://img.shields.io/badge/渠道-稳定版-green)]()
 [![反混淆](https://img.shields.io/badge/反混淆-true-red)]()
 
