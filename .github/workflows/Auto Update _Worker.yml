@@ -200,7 +200,7 @@ jobs:
             print("文件保存成功")
       shell: python
 
-    # 5. 文档更新（简化版）
+    # 5. 文档更新（增强状态显示版）
     - name: 初始化或更新README
       if: steps.get-release.outputs.version
       run: |
@@ -242,9 +242,29 @@ jobs:
           echo "   - 发布渠道（稳定版/测试版）" >> README.md
           echo "   - 是否反混淆代码（true/false）" >> README.md
           echo "   > 💡 留空参数将使用上次配置" >> README.md
+          echo "" >> README.md
+          
+          echo "## 🔍 当前状态" >> README.md
         fi
 
-        # 仅更新徽章显示
+        # 更新状态信息区块
+        sed -i '/## 🔍 当前状态/,/^## /{/^## /!d}' README.md
+        echo "### 🛠️ 运行时配置" >> README.md
+        echo "- 🏷️ **版本号**: \`${{ steps.get-release.outputs.version }}\`" >> README.md
+        echo "- 🕒 **更新时间**: \`$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')\` (北京时间)" >> README.md
+        echo "- ⚙️ **更新模式**: \`${{ env.UPDATE_MODE }}\`" >> README.md
+        echo "- 🌿 **发布渠道**: \`${{ env.RELEASE_CHANNEL }}\`" >> README.md
+        echo "- 🔧 **反混淆**: \`${{ env.DEOBFUSCATE }}\`" >> README.md
+        echo "" >> README.md
+        echo "### 📊 状态徽章" >> README.md
+        echo "[![状态](https://img.shields.io/badge/状态-运行中-brightgreen)]()" >> README.md
+        echo "[![版本](https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue)]()" >> README.md
+        echo "[![模式](https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow)]()" >> README.md
+        echo "[![渠道](https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green)]()" >> README.md
+        echo "[![反混淆](https://img.shields.io/badge/反混淆-$DEOBFUSCATE_URL-red)]()" >> README.md
+        echo "" >> README.md
+
+        # 更新所有徽章显示
         sed -i "s|https://img.shields.io/badge/版本-[^)]*|https://img.shields.io/badge/版本-${{ steps.get-release.outputs.version }}-blue|g" README.md
         sed -i "s|https://img.shields.io/badge/模式-[^)]*|https://img.shields.io/badge/模式-$UPDATE_MODE_URL-yellow|g" README.md
         sed -i "s|https://img.shields.io/badge/渠道-[^)]*|https://img.shields.io/badge/渠道-$RELEASE_CHANNEL_URL-green|g" README.md
