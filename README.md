@@ -3,7 +3,7 @@
 [![版本](https://img.shields.io/badge/版本-v3.4.9-blue)]()
 [![模式](https://img.shields.io/badge/模式-自动-yellow)]()
 [![渠道](https://img.shields.io/badge/渠道-稳定版-green)]()
-[![反混淆](https://img.shields.io/badge/反混淆-true-red)]()
+[![反混淆](https://img.shields.io/badge/反混淆-false-red)]()
 
 ## 🚀 功能概述
 - 自动检查并更新Worker脚本
@@ -31,7 +31,7 @@
 - 🏷️ **版本号**: `v3.4.9`
 - ⚙️ **更新模式**: `自动`
 - 🌿 **发布渠道**: `稳定版`
-- 🔧 **反混淆**: `true`
+- 🔧 **反混淆**: `false`
 
 > ✅ **更新状态**: 已更新到最新版本
 
